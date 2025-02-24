@@ -1,0 +1,814 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - bot_challenge
+  - inform_caste
+  - help
+  - just_restart
+  - provide_aadhar_number
+  - start_registration
+  - stop
+
+entities:
+  - caste
+  - aadhar_number
+  - id_type
+
+forms:
+  phoneNumberForm:
+    required_slots:
+      - phoneNumber
+      - useWhatsappNum
+      - phone_verification_otp
+      - retry_phoneNumberForm
+
+  onboardingForm:
+    required_slots:
+      - aadhar_number
+      - aadhar_verification_otp
+      - id_type
+      - id_number
+      - user_religion
+      - caste
+      - address_type
+      - address
+      - add_nominee
+      - nominee_name
+      - relationship_with_nominee
+      - nominee_gender
+      - nominee_age
+      - nominee_occupation
+      - nominee_annual_income
+      - retry_onboardingForm
+      - confirmation
+      - field_to_change
+      - has_disability
+
+
+slots:
+  phoneNumber:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: phoneNumberForm
+            requested_slot: phoneNumber
+
+  useWhatsappNum:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: true
+        conditions:
+          - active_loop: phoneNumberForm
+            requested_slot: useWhatsappNum
+      - type: from_intent
+        intent: deny
+        value: false
+        conditions:
+          - active_loop: phoneNumberForm
+            requested_slot: useWhatsappNum
+
+
+  phone_verification_otp:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: phoneNumberForm
+            requested_slot: phone_verification_otp
+
+  already_submitted:
+    type: bool
+    initial_value: False
+    influence_conversation: true
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: true
+        conditions:
+          - requested_slot: phone_verification_otp
+
+  existing_details:
+    type: text
+    initial_value: None
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: phone_verification_otp
+
+
+  aadhar_number:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: aadhar_number
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: aadhar_number
+
+  aadhar_verification_otp:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: aadhar_verification_otp
+
+  id_type:
+    type: categorical
+    values:
+      - Driving License
+      - MGNREGA Card
+      - Pan Card
+      - Passport
+      - Voter ID
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: id_type
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: id_type
+
+  id_number:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: id_number
+
+  caste:
+    type: categorical
+    values:
+      - General
+      - SC
+      - ST
+      - OBC
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: caste
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: caste
+
+  has_disability:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: true
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: has_disability
+      - type: from_intent
+        intent: deny
+        value: false
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: has_disability
+
+  add_nominee:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: True
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: add_nominee
+      - type: from_intent
+        intent: deny
+        value: False
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: add_nominee
+
+  nominee_name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: nominee_name
+
+  nominee_gender:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: nominee_gender
+
+  relationship_with_nominee:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: relationship_with_nominee
+
+  nominee_age:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: nominee_age
+
+  nominee_occupation:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: nominee_occupation
+
+
+  nominee_annual_income:
+    type: float
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: nominee_annual_income
+
+  nominee_title:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: relationship_with_nominee
+
+
+  # confirmation:
+  #   type: text
+  #     influence_conversation: true
+  #     mappings:
+  #       - type: from_intent
+  #         intent: submit
+  #         value: "submit"
+  #         conditions:
+  #           - active_loop: onboardingForm
+  #             requested_slot: confirmation
+  #       - type: from_intent
+  #         intent: restart
+  #         value: "restart"
+  #         conditions:
+  #           - active_loop: onboardingForm
+  #             requested_slot: confirmation
+  #       - type: from_intent
+  #         intent: change
+  #         value: "change"
+  #         conditions:
+  #           - active_loop: onboardingForm
+  #             requested_slot: confirmation
+
+  confirmation:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: confirmation
+
+  field_to_change:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: field_to_change
+
+
+  address_type:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: address_type
+
+
+  aadhar_address:
+    type: text
+    initial_value: None
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_number
+
+  permanent_address:
+    type: text
+    initial_value: None
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: address_type
+
+  present_address:
+    type: text
+    initial_value: None
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: address_type
+
+  address:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: address
+
+  address_type2:
+    type: text
+    initial_value: None
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: address_type
+
+
+
+
+  onboarding_complete:
+    type: bool
+    initial_value: False
+    mappings:
+      - type: from_intent
+        value: False
+        intent: start_registration
+
+  quit_form:
+    type: bool
+    initial_value: False
+    mappings:
+      - type: from_intent
+        value: False
+        intent: greet
+      - type: from_intent
+        value: True
+        intent: stop
+
+  userId:
+    type: text
+    initial_value: '123'
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: phone_verification_otp
+
+
+
+  auth_token:
+    type: text
+    initial_value: '123'
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: phone_verification_otp
+
+  already_registered:
+    type: bool
+    initial_value: False
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: phoneNumber
+
+  user_name:
+    type: text
+    initial_value: 'No Name'
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_verfication_otp
+
+
+  user_gender:
+    type: text
+    initial_value: 'NA'
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_verfication_otp
+
+
+  user_religion: #ask
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: user_religion
+          # - requested_slot: user_religion
+
+  user_occupation:
+    type: text
+    initial_value: 'NA'
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_verfication_otp
+
+  guardian:
+    type: text
+    initial_value: 'NA'
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_verfication_otp
+
+  relation_with_guardian:
+    type: text
+    initial_value: 'NA'
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_verfication_otp
+
+  user_dob:
+    type: text
+    initial_value: 'NA'
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_verfication_otp
+
+  user_title:
+    type: text
+    initial_value: 'NA'
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_verfication_otp
+
+  aadhar_pincode:
+    type: text
+    initial_value: 'NA'
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_verfication_otp
+
+  retry_phoneNumberForm:
+    type: float
+    initial_value: 0
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: phoneNumberForm
+            requested_slot: retry_phoneNumberForm
+
+  retry_onboardingForm:
+    type: float
+    initial_value: 0
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: retry_onboardingForm
+
+
+  error_occurrence:
+    type: float
+    initial_value: 0
+    influence_conversation: true
+    mappings:
+      - type: from_text
+
+
+
+responses:
+  utter_greet:
+    - text: "Namaste🙏🏻! Welcome to eKCC! I am Bandhu, your gateway to financial support and resources."
+
+  utter_greet2:
+    - text: "Let's get started with your registration."
+      buttons:
+        - title: "Start Registration"
+          payload: "/start_registration"
+
+  utter_ask_phoneNumber:
+    - text: "Alright, please enter the phone number for registration."
+
+  utter_ask_phone_verification_otp:
+    - text: "Please enter the 6 digit otp sent to your phone."
+      buttons:
+        - title: "Resend OTP"
+          payload: "!resendotp"
+
+  utter_ask_logout_all_device:
+    - text: "User is already logged in. Please log out from the other device."
+      buttons:
+        - title: "Logout All Devices"
+          payload: "!resendotp"
+
+
+  utter_ask_aadhar_number:
+    - text: "Kindly share your Aadhaar Number to proceed further."
+
+  utter_ask_aadhar_verification_otp:
+    - text: "Thank you! Please enter the 6 digit OTP that you have received on your mobile number registered with Aadhaar."
+      buttons:
+        - title: "Resend OTP"
+          payload: "!resendotp"
+
+
+  utter_ask_id_type:
+  - text: "ID Type||Please select the ID type you would like to register with:"
+    buttons:
+      - title: "Driving License"
+        payload: 'inform_id_type{{"id_type":"Driving License"}}'
+      - title: "MGNREGA Card"
+        payload: "inform_id_type{{\"id_type\":\"MGNREGA Card\"}}"
+      - title: "Pan Card"
+        payload: "inform_id_type{{\"id_type\":\"Pan Card\"}}"
+      - title: "Passport"
+        payload: "inform_id_type{{\"id_type\":\"Passport\"}}"
+      - title: "Voter ID"
+        payload: "inform_id_type{{\"id_type\":\"Voter ID\"}}"
+
+
+  utter_ask_id_number:
+    - text:  "Please enter your {id_type} number."
+
+  utter_ask_caste:
+    - text: "Caste||Please select your caste:"
+      buttons:
+        - title: "General"
+          payload: '/inform_caste{{"caste":"General"}}'
+        - title: "SC"
+          payload: '/inform_caste{{"caste":"SC"}}'
+        - title: "ST"
+          payload: '/inform_caste{{"caste":"ST"}}'
+        - title: "OBC"
+          payload: '/inform_caste{{"caste":"OBC"}}'
+        - title: "Other"
+          payload: '/inform_caste{{"caste":"Other"}}'
+
+  utter_ask_has_disability:
+    - text: "Do you have any disability?"
+      buttons:
+        - title: "Yes"
+          payload: "/affirm"
+        - title: "No"
+          payload: "/deny"
+
+
+  utter_ask_address_type:
+    - text: "*Is the below address your*: \n {aadhar_address}  "
+      buttons:
+        - title: "Permanent Address"
+          payload: "permanent_address"
+        - title: "Present Address"
+          payload: "present_address"
+        - title: "Both"
+          payload: "both"
+
+  utter_ask_address:
+    - text: "Please provide your {address_type2} address."
+
+
+
+  utter_ask_add_nominee:
+    - text: "Would you like to add a family member as your nominee?"
+      buttons:
+        - title: "Yes"
+          payload: "/affirm"
+        - title: "No"
+          payload: "/deny"
+
+  utter_ask_nominee_name:
+    - text: "Please enter the name of your nominee"
+
+  utter_ask_nominee_gender:
+      - text: "Select gender of nominee"
+        buttons:
+          - title: "Male"
+            payload: "Male"
+          - title: "Female"
+            payload: "Female"
+          - title: "Others"
+            payload: "Others"
+
+  utter_ask_relationship_with_nominee:
+    - text: "Nominee Relationship||Please select your relationship with the nominee:"
+      buttons:
+        - title: "Daughter"
+          payload: "Daughter"
+        - title: "Mother"
+          payload: "Mother"
+        - title: "Sister"
+          payload: "Sister"
+        - title: "Wife"
+          payload: "Wife"
+        - title: "Brother"
+          payload: "Brother"
+        - title: "Father"
+          payload: "Father"
+        - title: "Husband"
+          payload: "Husband"
+        - title: "Son"
+          payload: "Son"
+
+  utter_ask_nominee_age:
+    - text: "Please enter the age of nominee"
+
+  utter_ask_nominee_occupation:
+    - text: "Occupation||Pleae enter the occupation of nominee"
+      buttons:
+        - title: "Agriculture"
+          payload: "Agriculture"
+        - title: "Labourer"
+          payload: "Labourer"
+        - title: "Service"
+          payload: "Service"
+        - title: "Housewife"
+          payload: "Housewife"
+        - title: "Others"
+          payload: "Others"
+
+
+  utter_ask_user_occupation:
+    - text: "Occupation||Pleae select your occupation"
+      buttons:
+        - title: "Agriculture"
+          payload: "Agriculture"
+        - title: "Labourer"
+          payload: "Labourer"
+        - title: "Service"
+          payload: "Service"
+        - title: "Others"
+          payload: "Others"
+
+  utter_ask_user_religion:
+    - text: "Religion||Please select your religion"
+      buttons:
+        - title: "Hindu"
+          payload: "Hindu"
+        - title: "Muslim"
+          payload: "Muslim"
+        - title: "Sikh"
+          payload: "Sikh"
+        - title: "Jain"
+          payload: "Jain"
+        - title: "Christian"
+          payload: "Christian"
+        - title: "Buddhist"
+          payload: "Buddhist"
+        - title: "Parsi"
+          payload: "Parsi"
+        - title: "Zoroastrian"
+          payload: "Zoroastrian"
+        - title: "Other Minorities"
+          payload: "Other Minorities"
+
+
+  utter_ask_nominee_annual_income:
+    - text: "Please enter the annual income of {nominee_title} {nominee_name} in INR."
+
+  utter_ask_retry_phoneNumberForm:
+    - text: "a"
+
+  utter_ask_retry_onboardingForm:
+    - text: "a"
+
+  utter_default:
+    - text: "Sorry, I didn't understand that. Can you rephrase?"
+  # utter_ask_pan_number:
+  #   - text: "Great! Please provide your PAN Number."
+
+  # utter_otp_success:
+  #   - text: "Yayy!! OTP Authentication Successful! Your user profile has been created."
+
+  # utter_greeting:
+  #   - text: "Hello Mr./Ms.! Let's move on to the next steps."
+
+  utter_ask_voter_id:
+    - text: "Please scan your Voter ID to continue."
+
+
+
+
+
+  utter_submit:
+    - text: "Thank you for completing your registration with eKisanCredit. We're here to support you every step of the way. Have a great day!"
+
+  # utter_ask_has_pan:
+  #   - text: "Do you have a PAN card?"
+  #     buttons:
+  #       - title: "Yes"
+  #         payload: "/affirm"
+  #       - title: "No"
+  #         payload: "/deny"
+
+
+
+  # utter_ask_disability_type:
+  #   - text: "Disability||Which types of disability do you have?"
+  #     buttons:
+  #       - title: "Physical Disability"
+  #         payload: "Physical Disability"
+  #       - title: "Visual Impairment"
+  #         payload: "Visual Impairment"
+  #       - title: "Hearing Impairment"
+  #         payload: "Hearing Impairment"
+  #       - title: "Cognitive Disability"
+  #         payload: "Cognitive Disability"
+  #       - title: "Other"
+  #         payload: "Other"
+
+
+
+  utter_slots_values:
+    - text: "Your inputs are:\n- Phone Number: {phoneNumber}\n- Aadhar Number: {aadhar_number}\n- ID type -  {id_type}\n- ID number -  {id_number}\n- Caste: {caste} \n- Permanent Address: {permanent_address} \n- Present Address: {present_address}  \n- Nominee: {nominee_name} \n- Relationship With Nominee: {relationship_with_nominee} "
+
+  utter_help:
+    - text: "Here are my options. \n 1.Send !reset to reset a form and fill again. 2. Type !help to ask for help."
+
+  utter_already_filled:
+    - text: "It seems you have already filled the form."
+      buttons:
+        - title: "Register Again"
+          payload: "/reregister"
+
+  utter_form_stopped:
+    - text: "Stopping the form bye bye."
+
+
+  utter_goodbye:
+    - text: "GoodBye! Have a good day!"
+
+  utter_already_registered:
+    - text: "Oh! It seems you are already registered."
+  utter_restart:
+    - text: "The Conversation has been reset, you can start a new conversation by sending a 'Hi'."
+  utter_ask_confirmation:
+    - text: "Do you confirm?"
+
+
+
+
+actions:
+  - utter_greet
+  - utter_already_registered
+  - utter_greet2
+  - utter_slots_values
+  - utter_submit
+  - validate_onboardingForm
+  - validate_phoneNumberForm
+  - utter_iamabot
+  - utter_goodbye
+  - action_reset_all_slots
+  - check_if_filled
+  - start_form_if
+  - action_stop_form
+  - action_ask_phoneNumberForm_useWhatsappNum
+  - action_save_details
+  - action_trigger_form
+  - make_user_say_restart
+  - action_ask_onboardingForm_confirmation
+  - action_ask_onboardingForm_field_to_change
+
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

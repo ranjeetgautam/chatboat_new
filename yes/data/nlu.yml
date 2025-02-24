@@ -1,0 +1,190 @@
+
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+
+- intent: mood_great
+  examples: |
+    - perfect
+    - great
+    - amazing
+    - feeling like a king
+    - wonderful
+    - I am feeling very good
+    - I am great
+    - I am amazing
+    - I am going to save the world
+    - super stoked
+    - extremely good
+    - so so perfect
+    - so good
+    - so perfect
+
+- intent: mood_unhappy
+  examples: |
+    - my day was horrible
+    - I am sad
+    - I don't feel very well
+    - I am disappointed
+    - super sad
+    - I'm so sad
+    - sad
+    - very sad
+    - unhappy
+    - not good
+    - not very good
+    - extremly sad
+    - so saad
+    - so sad
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
+
+- intent: submit
+  examples: |
+    - submit
+    - I want to submit
+
+- intent: change
+  examples: |
+    - change
+    - I want to change 
+    - I want to change user_id
+
+- intent: inform_id_type
+  examples: |
+    - I have a [Driving License](id_type)
+    - My ID is a [MGNREGA Card](id_type)
+    - I would like to register with my [Pan Card](id_type)
+    - I want to use my [Passport](id_type)
+    - I will register with my [Voter ID](id_type)
+    - Driving Licence
+    - MGNREGA Card
+    - Voter ID
+
+- intent: inform_caste
+  examples: |
+    - I belong to the [SC](caste) caste
+    - My caste is [ST](caste)
+    - I am from the [OBC](caste) category
+    - [Other](caste) caste
+    - [General](caste) caste
+
+- intent: inform_disability_type
+  examples: |
+    - I have [Physical Disability](disability_type)
+    - My disability is [Visual Impairment](disability_type)
+    - I suffer from [Hearing Impairment](disability_type)
+    - I have a [Cognitive Disability](disability_type)
+    - My disability type is [Other](disability_type)
+
+- intent: provide_aadhar_number
+  examples: |
+    - My Aadhaar number is [123456789012](aadhar_number)
+    - Here's my Aadhaar: [456789012345](aadhar_number)
+    - Aadhaar card number: [789012345678](aadhar_number)
+    - My Aadhar is [987654321098](aadhar_number)
+    - [111122223333](aadhar_number) is my Aadhaar number
+    - [1111 2222 3333](aadhar_number) is my Aadhaar number
+    - My aadhar number is [4444 5555 6666](aadhar_number)
+    - Aadhaar: [7777 8888 9999](aadhar_number)
+    - [3333 4444 5555](aadhar_number)
+    - [2222 3333 4444](aadhar_number)
+    - [5555 6666 7777](aadhar_number)
+    - [9999 0000 1111](aadhar_number)
+    - [333344445555](aadhar_number)
+    - [222233334444](aadhar_number)
+    - [555566667797](aadhar_number)
+
+- intent: help 
+  examples: |
+    - !help 
+    - help
+    - what are your commands
+
+# - intent: reset
+#   examples: |
+#     - !reset 
+#     - reset
+#     - i want to fill the form again
+
+- intent: just_restart
+  examples: |
+    - i want to fill the form again
+    - reset
+    - !reset
+    - restart
+
+
+
+- intent: start_registration
+  examples: |
+    - start_registration
+    - start registration
+
+
+- intent: stop 
+  examples: |
+    - !stop 
+    - stop
+
+# - intent: inform_disability_type
+#   examples: |
+#     - I have [Physical Disability](disability_type)
+#     - My disability is [Visual Impairment](disability_type)
+#     - I suffer from [Hearing Impairment](disability_type)
+#     - I have a [Cognitive Disability](disability_type)
+#     - My disability type is [Other](disability_type)
+
+# #

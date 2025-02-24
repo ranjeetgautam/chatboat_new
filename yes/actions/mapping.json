@@ -1,0 +1,52 @@
+{
+    "title": {
+        "mr": 380,
+        "mrs": 381,
+        "miss": 382
+    },
+    "id_proof": {
+        "driving license": 450,
+        "mgnrega card": 453,
+        "pan card": 394,
+        "passport": 449,
+        "voter id": 452
+    },
+    "caste": {
+        "general": 388,
+        "sc": 629,
+        "st": 630,
+        "obc": 387
+    },
+    "occupation": {
+        "agriculture": 13,
+        "labourer": 20,
+        "service": 24,
+        "others": 29
+    },
+    "religion": {
+        "hindu": 357,
+        "muslim": 359,
+        "sikh": 364,
+        "jain": 358,
+        "christian": 256,
+        "buddhist": 355,
+        "parsi": 362,
+        "zoroastrian": 363,
+        "other-minorities": 628
+    },
+    "gender": {
+        "male": 44,
+        "female": 45,
+        "other": 638
+    },
+    "relationship": {
+        "daughter": 53,
+        "mother": 65,
+        "sister": 72,
+        "wife": 76,
+        "brother": 50,
+        "father": 55,
+        "husband": 62,
+        "son": 73
+    }
+}

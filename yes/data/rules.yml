@@ -1,0 +1,67 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: speak options when user types help
+  steps:
+  - intent: help
+  - action: utter_help
+
+- rule: greeting
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - action: utter_greet2
+
+
+- rule: restart
+  steps:
+    - intent: just_restart
+    - action: action_restart
+
+
+- rule: Say 'I am a bot' anytime the user challenges
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+- rule: Activate form 1
+  steps:
+  - intent: start_registration
+  - action: phoneNumberForm
+  - active_loop: phoneNumberForm
+
+- rule: Interrupt Registration Form
+  steps:
+  - intent: stop
+  - action: action_stop_form
+  - active_loop: null
+
+
+- rule: Submit phoneNumberform
+  condition:
+  - active_loop: phoneNumberForm
+  steps:
+  - action: phoneNumberForm
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - action: action_trigger_form
+
+
+- rule: Submit form
+  condition:
+  - active_loop: onboardingForm
+  steps:
+  - action: onboardingForm
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+  - action: utter_submit
+  - action: utter_slots_values
+  - action: action_save_details
