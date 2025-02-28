@@ -71,89 +71,187 @@ def send_aadhar_otp(aadhar_number, userId, auth_token,user_consent=True):
         return False, "Failed to send otp."
 
 
-def verify_aadhar_otp(aadhar_number, entered_otp, userId,auth_token):
+# def verify_aadhar_otp(aadhar_number, entered_otp, userId,auth_token):
+#     status = False
+#     print("INPUT for aadhar verifiation", aadhar_number, entered_otp, userId)
+#
+#     url = f"http://13.232.66.157:8080/api/auth/aadhar/v1/kyc?aadharNo={aadhar_number}&otp={entered_otp}&userId={userId}"
+#     payload = {}
+#     headers = {
+#       'Accept': 'application/json, text/plain, */*',
+#       'Accept-Language': 'en',
+#       'Authorization': 'Bearer '+auth_token,
+#       'Connection': 'keep-alive',
+#       'Content-Length': '0',
+#       'Content-Type': 'application/x-www-form-urlencoded',
+#       'Origin': 'http://13.232.66.157:3000',
+#       'Referer': 'http://13.232.66.157:3000/',
+#       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+#     }
+#
+#     response = requests.request("POST", url, headers=headers, data=payload)
+#
+#     # Convert to cURL command
+#
+#     curl_command = f"curl -X POST '{url}'"
+#     for key, value in headers.items():
+#         curl_command += f" -H '{key}: {value}'"
+#
+#     curl_command += f" -d '{json.dumps(payload)}'"
+#
+#     print("Equivalent cURL command:")
+#     print(curl_command)
+#
+#     print("response", response.json())
+#
+#     print(response.text)
+#
+#     #with open("aadhar_response.json", "w") as json_file:
+#     #json.dump(response.json(), json_file)
+#     address_keys = {
+#         "house": "House",
+#         "street": "Street",
+#         "vtc": "Village/Town/City",
+#         "loc": "Location",
+#         "subdist": "Sub-district",
+#         "dist": "District",
+#         "state": "State",
+#         "pc": "Pin Code"
+#     }
+#     print(response.json(), "AADHAR OTP VERIFICATION RESPONSE")
+#     if response.status_code  ==200:
+#         response = response.json()
+#         print(response, "OTP VERIFICATION RESPONSE")
+#         if response["status"] != 200:
+#             return False,  response['message'], None
+#
+#         message = response['message']
+#         if message == "Aadhar kyc process completed":
+#             status = True
+#             gender = response['data']['gender']
+#             dob = response['data']['dob']
+#             care_of = response['data']['co']
+#             pincode = response['data']['pc']
+#             relation_with_guardian, guardian = determine_relation(care_of)
+#             if gender == 'M':
+#                 title = "Mr."
+#             elif gender == "F":
+#                 title = "Mrs."
+#             elif gender == "O":
+#                 title = ""
+#             else:
+#                 title = ""
+#
+#             name = response['data']['name']
+#             address = ""
+#             for key, val in address_keys.items():
+#                 response_val = response['data'].get(key, '')
+#                 if response_val:
+#                     address += f"{val}: {response_val}\n"
+#             out = {'status': status, 'title': title, 'name': name, 'address': address, 'gender': gender, 'dob': dob,
+#                    'guardian': guardian, 'relation_with_guardian': relation_with_guardian, "aadhar_pincode": pincode}
+#             return out
+#     # return {'status': False, 'title': None, 'name': None, 'address': None, 'gender': None, 'dob': None,
+#     #         'guardian': None, 'relation_with_guardian': None, "aadhar_pincode": None}
+#     # return False,None, None, None
+
+def verify_aadhar_otp(aadhar_number, entered_otp, userId, auth_token):
     status = False
-    print("INPUT for aadhar verifiation", aadhar_number, entered_otp, userId)
+    print("Input for Aadhar verification:", aadhar_number, entered_otp, userId)
 
     url = f"http://13.232.66.157:8080/api/auth/aadhar/v1/kyc?aadharNo={aadhar_number}&otp={entered_otp}&userId={userId}"
     payload = {}
     headers = {
-      'Accept': 'application/json, text/plain, */*',
-      'Accept-Language': 'en',
-      'Authorization': 'Bearer '+auth_token,
-      'Connection': 'keep-alive',
-      'Content-Length': '0',
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Origin': 'http://13.232.66.157:3000',
-      'Referer': 'http://13.232.66.157:3000/',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'en',
+        'Authorization': f'Bearer {auth_token}',
+        'Connection': 'keep-alive',
+        'Content-Length': '0',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Origin': 'http://13.232.66.157:3000',
+        'Referer': 'http://13.232.66.157:3000/',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
     }
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    try:
+        response = requests.post(url, headers=headers, data=payload)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        response_data = response.json()
+        print("Aadhar OTP Verification Response:", response_data)
 
-    # Convert to cURL command
+        address_keys = {
+            "house": "House",
+            "street": "Street",
+            "vtc": "Village/Town/City",
+            "loc": "Location",
+            "subdist": "Sub-district",
+            "dist": "District",
+            "state": "State",
+            "pc": "Pin Code"
+        }
 
-    curl_command = f"curl -X POST '{url}'"
-    for key, value in headers.items():
-        curl_command += f" -H '{key}: {value}'"
+        # Check if the status is 200 and handle the response
+        if response_data.get("status") == 200:
+            message = response_data.get('message', '')
+            print(message,"............")
+            # if message != "Aadhar KYC process completed":
+            #     return {'status': True, 'message': message, 'data': None}
 
-    curl_command += f" -d '{json.dumps(payload)}'"
-
-    print("Equivalent cURL command:")
-    print(curl_command)
-
-    print("response", response.json())
-
-    print(response.text)
-
-    #with open("aadhar_response.json", "w") as json_file:
-    #json.dump(response.json(), json_file)
-    address_keys = {
-        "house": "House",
-        "street": "Street",
-        "vtc": "Village/Town/City",
-        "loc": "Location",
-        "subdist": "Sub-district",
-        "dist": "District",
-        "state": "State",
-        "pc": "Pin Code"
-    }
-    print(response.json(), "AADHAR OTP VERIFICATION RESPONSE")
-    if response.status_code  ==200:
-        response = response.json()
-        print(response, "OTP VERIFICATION RESPONSE")
-        if response["status"] != 200:
-            return False,  response['message'], None
-        message = response['message']
-        if message == "Aadhar kyc process completed":
             status = True
-            gender = response['data']['gender']
-            dob = response['data']['dob']
-            care_of = response['data']['co']
-            pincode = response['data']['pc']
+            data = response_data.get('data', {})
+            gender = data.get('gender', '')
+            dob = data.get('dob', '')
+            care_of = data.get('co', '')
+            pincode = data.get('pc', '')
             relation_with_guardian, guardian = determine_relation(care_of)
+
+            # Determine title based on gender
+            title = ""
+            gender_data = "Other"
+            swd = ""
             if gender == 'M':
                 title = "Mr."
+                gender_data = 'Male'
+                swd='Son Of'
             elif gender == "F":
                 title = "Mrs."
-            elif gender == "O":
-                title = ""
-            else:
-                title = ""
+                gender_data = 'Female'
+                swd = 'Daughter Of'
 
-            name = response['data']['name']
+            name = data.get('name', '')
             address = ""
             for key, val in address_keys.items():
-                response_val = response['data'].get(key, '')
+                response_val = data.get(key, '')
                 if response_val:
                     address += f"{val}: {response_val}\n"
-            out = {'status': status, 'title': title, 'name': name, 'address': address, 'gender': gender, 'dob': dob,
-                   'guardian': guardian, 'relation_with_guardian': relation_with_guardian, "aadhar_pincode": pincode}
-            return out
-    return {'status': False, 'title': None, 'name': None, 'address': None, 'gender': None, 'dob': None,
-            'guardian': None, 'relation_with_guardian': None, "aadhar_pincode": None}
-    # return False,None, None, None
 
+            result = {
+                'status': status,
+                'title': title,
+                'name': name,
+                'address': address,
+                'gender': gender_data,
+                'dob': dob,
+                'guardian': guardian,
+                'relation_with_guardian': relation_with_guardian,
+                'aadhar_pincode': pincode,
+                'swd':swd,
+            }
+            return result
+
+        else:
+            message = response_data.get('message', 'Unknown error occurred.')
+            return {'status': False, 'message': message, 'data': None}
+
+    except requests.exceptions.RequestException as e:
+        print("HTTP Request Error:", e)
+        return {'status': False, 'message': 'Network error occurred.', 'data': None}
+    except json.JSONDecodeError:
+        print("Error decoding JSON response.")
+        return {'status': False, 'message': 'Invalid response from server.', 'data': None}
+    except Exception as e:
+        print("Unexpected error:", e)
+        return {'status': False, 'message': 'An unexpected error occurred.', 'data': None}
 
 def determine_relation(description):
     relation_map = {
@@ -426,6 +524,7 @@ def save_nominee_details(tracker):
 # Function to save user profile using API
 def save_user_profile(tracker):
     userId = tracker.get_slot('userId')
+    print("userId.......", userId)
     url = f'http://13.232.66.157:8080/api/party/farmer/save_user_profile?farmerId=&userId={userId}'
     auth_token = tracker.get_slot('auth_token')
     headers = {
@@ -448,15 +547,15 @@ def save_user_profile(tracker):
     religion_mapping = mapping.get("religion", {})
     gender_mapping = mapping.get("gender", {})
     relationship_mapping = mapping.get("relationship", {})
-
+    print("....."+tracker.get_slot("user_title")+"..."+tracker.get_slot("user_gender"))
     # Constructing data payload
     data = {
         "currentAddress": "",
         "registerId": "",
         "associateRegisterId": "",
         "permanentAddress": tracker.get_slot("permanent_address"),  # newly added
-        "titleId": title_mapping.get(tracker.get_slot("user_title").lower(), ""),
-        "genderId": gender_mapping.get(tracker.get_slot("user_gender").lower(), ""),
+        "titleId": 380,#title_mapping.get(tracker.get_slot("user_title").lower(), ""),
+        "genderId": 44,#gender_mapping.get(tracker.get_slot("user_gender").lower(), ""),
         "religionId": religion_mapping.get(tracker.get_slot("user_religion").lower(), ""),
         "casteId": caste_mapping.get(tracker.get_slot("caste").lower(), ""),
         "occupationId": occupation_mapping.get(tracker.get_slot("user_occupation").lower(), ""),
@@ -466,21 +565,22 @@ def save_user_profile(tracker):
         "dateOfBirth": convert_date_format(tracker.get_slot("user_dob")),
         "aadhaarNo": tracker.get_slot("aadhar_number"),
         "idProofNo": tracker.get_slot("id_number"),
-        "pacsMembe rNumber": None,
+        "pacsMemberNumber": None,
         "isPacsMember": 0,
         "createdBy": "self",
         "createdOn": "",
         "modifiedOn": "",
         "aadhaarAddress": tracker.get_slot("aadhar_address"),  # newly added
         "aadhaarPincode": tracker.get_slot("aadhar_pincode"),  # newly added,
-        "sdwOf": tracker.get_slot("relation_with_guardian"),
+        "sdwOf": tracker.get_slot("sdw"),
         "asAboveAddress": "",
         "email": "",
         "mobileNo": tracker.get_slot("phoneNumber"),
         "isSameAsPermanentAddress": False,
+        "mobileNumber": tracker.get_slot("phoneNumber"),
         "proofOfIdentityId": id_proof_mapping.get(tracker.get_slot("id_type").lower(), "")
     }
-
+    print(" Data...:",data)
     response = requests.post(url, headers=headers, json=data, verify=False)
     print(f"Headers: {headers} Data: {data}")
     print(response.status_code)

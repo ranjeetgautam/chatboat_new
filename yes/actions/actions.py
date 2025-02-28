@@ -244,7 +244,7 @@ class ValidatePhoneNumberForm(FormValidationAction):
                         existing_details = None
                     print(slot_value)
                     return {
-                        "logout_all_device": slot_value,
+                        "phone_verification_otp": slot_value,
                         'already_submitted': already_submitted,
                         'existing_details': existing_details,
                         'userId': out['userId'],
@@ -255,13 +255,7 @@ class ValidatePhoneNumberForm(FormValidationAction):
                     message = out.get('message', '')
                     if message:
                         dispatcher.utter_message(text=message)
-                    #return none_response
-                    return {
-                        "logout_all_device": slot_value,
-                        'userId': out['userId'],
-                        'auth_token': out['auth_token'],
-                        'retry_phoneNumberForm': 0
-                    }
+                    return none_response
 
         except Exception as e:
             print(f"Exception: {e}")
@@ -370,9 +364,9 @@ class ValidateOnboardingForm(FormValidationAction):
             else:
                 out = verify_aadhar_otp(aadhar_number, otp_value, userId,auth_token =auth_token)
                 print(out, 'received response from aadhar verification')
-                status, title, name, address, gender, dob, guardian, relation_with_guardian, aadhar_pincode = out[
-                    'status'], out['title'], out['name'], out['address'], out['gender'], out['dob'], out['guardian'], \
-                out['relation_with_guardian'], out['aadhar_pincode']
+                status, title, name, address, gender, dob, guardian, relation_with_guardian, aadhar_pincode = (
+                    out['status'], out['title'], out['name'], out['address'], out['gender'], out['dob'], out['guardian'],
+                out['swd'], out['aadhar_pincode'])
 
                 if status:
                     if title:
@@ -717,6 +711,7 @@ class SaveDetails(Action):
             self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
         add_nominee = tracker.get_slot('add_nominee')
+        print(".......",tracker)
         aadhar_response = save_user_profile(tracker)
         dispatcher.utter_message(text=aadhar_response['message'])
 
