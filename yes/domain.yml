@@ -462,6 +462,14 @@ slots:
         conditions:
           - requested_slot: aadhar_verfication_otp
 
+  sdw:
+    type: text
+    initial_value: 'NA'
+    mappings:
+      - type: from_text
+        conditions:
+          - requested_slot: aadhar_verfication_otp
+
   user_dob:
     type: text
     initial_value: 'NA'
@@ -653,7 +661,7 @@ responses:
     - text: "Please enter the age of nominee"
 
   utter_ask_nominee_occupation:
-    - text: "Occupation||Pleae enter the occupation of nominee"
+    - text: "Occupation||Please enter the occupation of nominee"
       buttons:
         - title: "Agriculture"
           payload: "Agriculture"
@@ -668,7 +676,7 @@ responses:
 
 
   utter_ask_user_occupation:
-    - text: "Occupation||Pleae select your occupation"
+    - text: "Occupation||Please select your occupation"
       buttons:
         - title: "Agriculture"
           payload: "Agriculture"

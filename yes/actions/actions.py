@@ -122,6 +122,7 @@ class ValidatePhoneNumberForm(FormValidationAction):
             return {"phoneNumber": None, 'already_registered': None}
         extracted_phone_number = int(extracted_phone_number)
         print('extracted phone number', extracted_phone_number)
+
         out = send_otp_register_and_login(extracted_phone_number)
         print('output from send otp', out)
         message = out.get('message', '')
@@ -364,9 +365,9 @@ class ValidateOnboardingForm(FormValidationAction):
             else:
                 out = verify_aadhar_otp(aadhar_number, otp_value, userId,auth_token =auth_token)
                 print(out, 'received response from aadhar verification')
-                status, title, name, address, gender, dob, guardian, relation_with_guardian, aadhar_pincode = (
+                status, title, name, address, gender, dob, guardian, relation_with_guardian, sdw, aadhar_pincode = (
                     out['status'], out['title'], out['name'], out['address'], out['gender'], out['dob'], out['guardian'],
-                out['swd'], out['aadhar_pincode'])
+                out['sdw'],out['sdw'], out['aadhar_pincode'])
 
                 if status:
                     if title:
@@ -374,10 +375,19 @@ class ValidateOnboardingForm(FormValidationAction):
                     else:
                         dispatcher.utter_message(text=f"Hello {name}! Let's move on to the next steps.")
 
-                    return {"aadhar_verification_otp": slot_value, "user_name": name, "aadhar_address": address,
-                            'user_title': title, 'user_gender': gender, 'user_dob': dob,
-                            'user_occupation': user_occupation, 'guardian': guardian,
-                            'relation_with_guardian': relation_with_guardian, 'aadhar_pincode': aadhar_pincode}
+                    print("sdw:", sdw)
+
+                    return {"aadhar_verification_otp": slot_value,
+                            "user_name": name,
+                            "aadhar_address": address,
+                            'user_title': title,
+                            'user_gender': gender,
+                            'user_dob': dob,
+                            'user_occupation': user_occupation,
+                            'guardian': guardian,
+                            'relation_with_guardian': relation_with_guardian,
+                            'sdw' : sdw ,
+                            'aadhar_pincode': aadhar_pincode }
 
                 else:
                     dispatcher.utter_message(text="The OTP is invalid. Please enter correct otp.")
@@ -690,10 +700,11 @@ class AskForSlotAction(Action):
             self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
         sender_id = get_phone_from_sender_id(tracker.sender_id)
-
+        phoneNumber = tracker.get_slot('phoneNumber')
+        print(f"phone no: {phoneNumber}")
         print(f"Sender ID: {sender_id}")
         dispatcher.utter_message(
-            text=f"Do you want to register with this phone number - {sender_id}?",
+            text=f"Do you want to register with this phone number - {phoneNumber}?",
             buttons=[
                 {"title": "Yes", "payload": "/affirm"},
                 {"title": "No", "payload": "/deny"}
@@ -712,6 +723,11 @@ class SaveDetails(Action):
     ) -> List[EventType]:
         add_nominee = tracker.get_slot('add_nominee')
         print(".......",tracker)
+        print(".......", add_nominee)
+
+        sdw = tracker.get_slot('sdw')
+        print("sdw .......", sdw)
+
         aadhar_response = save_user_profile(tracker)
         dispatcher.utter_message(text=aadhar_response['message'])
 
