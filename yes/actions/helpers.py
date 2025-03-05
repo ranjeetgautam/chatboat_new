@@ -208,17 +208,18 @@ def verify_aadhar_otp(aadhar_number, entered_otp, userId, auth_token):
             # Determine title based on gender
             title = ""
             gender_data = "Other"
-            swd = ""
+            sdw = ""
             if gender == 'M':
                 title = "Mr."
                 gender_data = 'Male'
-                swd='Son Of'
+                sdw= "SON OF"
             elif gender == "F":
                 title = "Mrs."
                 gender_data = 'Female'
-                swd = 'Daughter Of'
+                sdw = "DAUGHTER OF"
 
             name = data.get('name', '')
+            print(message, "............"+ sdw)
             address = ""
             for key, val in address_keys.items():
                 response_val = data.get(key, '')
@@ -235,7 +236,7 @@ def verify_aadhar_otp(aadhar_number, entered_otp, userId, auth_token):
                 'guardian': guardian,
                 'relation_with_guardian': relation_with_guardian,
                 'aadhar_pincode': pincode,
-                'swd':swd,
+                'sdw': sdw
             }
             return result
 
@@ -471,8 +472,12 @@ def save_nominee_details(tracker):
     print('mapping file data', mapping)
     userId = tracker.get_slot('userId')
     auth_token = tracker.get_slot('auth_token')
+
     # get farmer id
     farmerId = get_farmer_id(userId=userId, auth_token=auth_token)
+
+    print('userId ...... ', userId)
+    print('farmerId ...... ', farmerId)
     # Retrieve slot values from tracker
     nominee_details = {
         "nomineeName": tracker.get_slot("nominee_name"),
@@ -548,6 +553,8 @@ def save_user_profile(tracker):
     gender_mapping = mapping.get("gender", {})
     relationship_mapping = mapping.get("relationship", {})
     print("....."+tracker.get_slot("user_title")+"..."+tracker.get_slot("user_gender"))
+
+
     # Constructing data payload
     data = {
         "currentAddress": "",
