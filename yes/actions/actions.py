@@ -722,14 +722,21 @@ class SaveDetails(Action):
             self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
         add_nominee = tracker.get_slot('add_nominee')
+        add_address = tracker.get_slot('add_present_and_permanent_address')
         print(".......",tracker)
         print(".......", add_nominee)
+        print(".......", add_address)
 
         sdw = tracker.get_slot('sdw')
         print("sdw .......", sdw)
 
         aadhar_response = save_user_profile(tracker)
         dispatcher.utter_message(text=aadhar_response['message'])
+
+        if add_address:
+            address_response = save_address_details(tracker)
+            # dispatcher.utter_message(text=nominee_response['message'])
+            dispatcher.utter_message(text=address_response['data'])
 
         if add_nominee:
             nominee_response = save_nominee_details(tracker)
