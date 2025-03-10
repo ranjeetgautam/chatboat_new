@@ -65,3 +65,27 @@ rules:
   - action: utter_submit
   - action: utter_slots_values
   - action: action_save_details
+
+#    ===========================================================
+
+#- rule: Skip permanent address if same as present
+#  steps:
+#      - intent: inform
+#      - action: utter_ask_is_permanent_same_as_present
+#      - slot_was_set:
+#          - is_permanent_same_as_present: True
+#      - action: utter_skip_permanent_address
+#      - action: action_next_step  # Moves to the next step in the form
+#
+#- rule: Ask for permanent address if different
+#  steps:
+#      - intent: inform
+#      - action: utter_ask_is_permanent_same_as_present
+#      - slot_was_set:
+#          - is_permanent_same_as_present: False
+#      - action: utter_ask_permanent_address_1
+#      - active_loop: onboardingForm
+
+
+#===============================================================================
+

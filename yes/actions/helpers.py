@@ -517,12 +517,90 @@ def save_nominee_details(tracker):
     }
 
     # Send the POST request
-    print(f"Headers: {headers} Data: {data}")
+    # print(f"Headers: {headers} Data: {data}")
+
     response = requests.post(url, headers=headers, data=data, verify=False)
     print(response.status_code)
     print(response.text)
     # Print the response
     print('Nominee response', response.json())
+    return response.json()
+
+def save_address_details(tracker):
+    # Read the mapping file
+    mapping = load_mapping()
+    print('mapping file data', mapping)
+    userId = tracker.get_slot('userId')
+    auth_token = tracker.get_slot('auth_token')
+    print('userId ...... ', userId)
+
+    # Retrieve slot values from tracker
+    address_details = {
+        "presentAddress1": tracker.get_slot("present_address_1"),
+        "presentState": tracker.get_slot("present_state"),
+        "presentDistrict": tracker.get_slot("present_district"),
+        "presentPincode": tracker.get_slot("present_pincode"),
+        "permanentAddress1": tracker.get_slot("permanent_address_1"),
+        "permanentState": tracker.get_slot("permanent_state")   ,
+        "permanentDistrict": tracker.get_slot("permanent_district"),
+        "permanentPincode": tracker.get_slot("permanent_pincode")
+    }
+    print('address_details', address_details)
+
+    # Prepare the data to be sent
+    # data = json.dumps([mapped_details])
+    data =[
+        {
+            # "id": 23,
+             "stateName": address_details["presentState"],
+             "districtName": address_details["presentDistrict"],
+             "address": address_details["presentAddress1"],
+             "pincode": address_details["presentPincode"],
+             "addressType": "CURRENT_ADDRESS"
+        },
+        {
+            # "id": 24,
+            "stateName": address_details["permanentState"],
+            "districtName": address_details["permanentDistrict"],
+            "address": address_details["permanentAddress1"],
+            "pincode": address_details["permanentPincode"],
+            "addressType": "PERMANENT_ADDRESS"
+
+        }
+    ]
+
+    # Define the URL and headers
+    url = f'http://13.232.66.157:8080/api/party/farmer/bot/save_address?userId={userId}&bothAddressSame=false'
+    headers = {
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'en',
+        'Authorization': f'Bearer {auth_token}',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/json',
+        'Origin': 'http://13.232.66.157:3000',
+        'Referer': 'http://13.232.66.157:3000/',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+    }
+
+    # Send the POST request
+    print(f"Headers: {headers} Data: {data}  url: {url}")
+
+    # Convert to cURL command
+    curl_command = f"curl -X POST '{url}'"
+    for key, value in headers.items():
+        curl_command += f" -H '{key}: {value}'"
+
+    curl_command += f" -d '{json.dumps(data)}'"
+
+    print("Equivalent cURL command:")
+    print(curl_command)
+
+    response = requests.post(url, headers=headers, data=data, verify=False)
+
+    print(response.status_code)
+    print(response.text)
+    # Print the response
+    print('address_details response', response.json())
     return response.json()
 
 

@@ -36,6 +36,15 @@ forms:
       - caste
       - address_type
       - address
+      - add_present_and_permanent_address
+      - present_address_1
+      - present_state
+      - present_district
+      - present_pincode
+      - permanent_address_1
+      - permanent_state
+      - permanent_district
+      - permanent_pincode
       - add_nominee
       - nominee_name
       - relationship_with_nominee
@@ -181,6 +190,98 @@ slots:
         conditions:
           - active_loop: onboardingForm
             requested_slot: has_disability
+
+#            ============================
+
+  add_present_and_permanent_address:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: True
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: add_present_and_permanent_address
+      - type: from_intent
+        intent: deny
+        value: False
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: add_present_and_permanent_address
+
+  present_address_1:
+      type: text
+      influence_conversation: true
+      mappings:
+        - type: from_text
+          conditions:
+            - active_loop: onboardingForm
+              requested_slot: present_address_1
+
+  present_state:
+      type: text
+      influence_conversation: true
+      mappings:
+        - type: from_text
+          conditions:
+            - active_loop: onboardingForm
+              requested_slot: present_state
+
+  present_district:
+      type: text
+      influence_conversation: true
+      mappings:
+        - type: from_text
+          conditions:
+            - active_loop: onboardingForm
+              requested_slot: present_district
+
+  present_pincode:
+      type: text
+      influence_conversation: true
+      mappings:
+        - type: from_text
+          conditions:
+            - active_loop: onboardingForm
+              requested_slot: present_pincode
+
+  permanent_address_1:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: permanent_address_1
+
+  permanent_state:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: permanent_state
+
+  permanent_district:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: permanent_district
+
+  permanent_pincode:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: onboardingForm
+            requested_slot: permanent_pincode
+#  ======================================
 
   add_nominee:
     type: bool
@@ -614,7 +715,40 @@ responses:
   utter_ask_address:
     - text: "Please provide your {address_type2} address."
 
+#---------------------------------------------
+  utter_ask_add_present_and_permanent_address:
+    - text: "Would you like to add a present and permanent address?"
+      buttons:
+        - title: "Yes"
+          payload: "/affirm"
+        - title: "No"
+          payload: "/deny"
 
+  utter_ask_present_address_1:
+    - text: "Please provide your present address"
+
+  utter_ask_present_state:
+     - text: "Please provide present state name"
+
+  utter_ask_present_district:
+    - text: "Please provide present district name"
+
+  utter_ask_present_pincode:
+     - text: "Please provide present pincode"
+
+  utter_ask_permanent_address_1:
+    - text: "Please provide your permanent address"
+
+  utter_ask_permanent_state:
+    - text: "Please provide permanent state name"
+
+  utter_ask_permanent_district:
+    - text: "Please provide permanent district name"
+
+  utter_ask_permanent_pincode:
+    - text: "Please provide permanent pincode"
+
+#  ---------------------------------------------
 
   utter_ask_add_nominee:
     - text: "Would you like to add a family member as your nominee?"
@@ -767,7 +901,7 @@ responses:
 
 
   utter_slots_values:
-    - text: "Your inputs are:\n- Phone Number: {phoneNumber}\n- Aadhar Number: {aadhar_number}\n- ID type -  {id_type}\n- ID number -  {id_number}\n- Caste: {caste} \n- Permanent Address: {permanent_address} \n- Present Address: {present_address}  \n- Nominee: {nominee_name} \n- Relationship With Nominee: {relationship_with_nominee} "
+    - text: "Your inputs are:\n- Phone Number: {phoneNumber}\n- Aadhar Number: {aadhar_number}\n- ID type -  {id_type}\n- ID number -  {id_number}\n- Caste: {caste} \n- Nominee: {nominee_name} \n- Relationship With Nominee: {relationship_with_nominee} "
 
   utter_help:
     - text: "Here are my options. \n 1.Send !reset to reset a form and fill again. 2. Type !help to ask for help."
